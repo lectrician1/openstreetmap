@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black87),
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -22,7 +23,21 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: MaterialColor(0xFFFFFFFF, {}),
+        primarySwatch: MaterialColor(
+          0xFFFFFFFF,
+          const <int, Color>{
+            50: const Color(0xFFFFFFFF),
+            100: const Color(0xFFFFFFFF),
+            200: const Color(0xFFFFFFFF),
+            300: const Color(0xFFFFFFFF),
+            400: const Color(0xFFFFFFFF),
+            500: const Color(0xFFFFFFFF),
+            600: const Color(0xFFFFFFFF),
+            700: const Color(0xFFFFFFFF),
+            800: const Color(0xFFFFFFFF),
+            900: const Color(0xFFFFFFFF),
+          },
+        ),
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -48,6 +63,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late FocusNode myFocusNode;
+  late bool selected;
+
+  @override
+  void initState() {
+    super.initState();
+
+    myFocusNode = FocusNode();
+    selected = false;
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    myFocusNode.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -73,18 +107,65 @@ class _MyHomePageState extends State<MyHomePage> {
         Positioned(
             left: 20,
             top: 20,
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(60)),
-                  color: Colors.white),
-              padding: EdgeInsets.all(20),
-              child: Text('OpenStreetMap',
-                  style: Theme.of(context).textTheme.headline6),
+            child: FloatingActionButton.extended(
+              onPressed: () {},
+              label: Text('OpenStreetMap'),
+              icon: Image.network(
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1024px-Openstreetmap_logo.svg.png',
+                  height: 30),
             )),
+        Positioned(
+            right: 20,
+            top: 20,
+            child: FloatingActionButton(
+                onPressed: () {}, child: Icon(Icons.menu))),
+        Positioned(
+          left: 20,
+          top: 90,
+          child: Material(
+              type: MaterialType.canvas,
+              shape: StadiumBorder(),
+              elevation: 6,
+              child: Container(
+                  width: 187.5,
+                  height: 48,
+                  child: Container(
+                    margin:
+                        EdgeInsets.only(left: 20, right: 20, top: 3, bottom: 0),
+                    child: TextField(
+                      cursorColor: Colors.black,
+                      focusNode: myFocusNode,
+                      decoration: InputDecoration(
+                          labelText: 'Search',
+                          border: InputBorder.none,
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          isDense: true,
+                          alignLabelWithHint: true,
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 0.0)),
+                      //style: TextStyle(: 5),
+                    ),
+                  ))),
+        ),
+        Positioned(
+            left: 15,
+            bottom: 15,
+            child: FloatingActionButton(
+              child: Icon(Icons.my_location),
+              onPressed: () {},
+            )),
+        Container(
+          alignment: Alignment.bottomCenter,
+          margin: EdgeInsets.all(17.5),
+          child: FloatingActionButton.extended(
+              onPressed: () {},
+              icon: Icon(Icons.copyright),
+              label: Text('OpenStreetMap contributors')),
+        )
       ]),
-      floatingActionButton: IconButton(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.edit),
         onPressed: () {},
-        icon: Icon(Icons.edit),
       ),
     );
   }
